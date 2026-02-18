@@ -26,7 +26,7 @@ class PatientMapper: Mapper<PatientDto, Patient> {
             email = entity.email,
             registrationDateTime = entity.registrationDateTime,
             // Map the nested Insurance object if it exists
-            insurance = entity.insurance?.let { insuranceMapper.entityToDto(it) },
+            insurance = entity.insurance?.let { InsuranceMapper().entityToDto(it) },
             // Map the list of Appointment objects to a list of IDs
             appointmentIds = entity.appointments.mapNotNull { it.id }
         )

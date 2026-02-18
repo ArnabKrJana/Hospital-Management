@@ -1,5 +1,6 @@
 package com.practice.hp.hospitalmanagement.service
 
+import com.practice.hp.hospitalmanagement.dto.updateDto.PatientUpdateDto
 import com.practice.hp.hospitalmanagement.entity.Insurance
 import com.practice.hp.hospitalmanagement.entity.Patient
 import java.util.UUID
@@ -11,16 +12,15 @@ interface PatientService {
 
     fun getPatientById(id: UUID): Patient
 
-    fun getPatientByEmail(email: String): Patient?
+    fun getPatientByEmail(email: String): Patient
 
-    fun updatePatientDetails(id: UUID, patientDetails: Patient): Patient
+    // Updated to accept DTO but return Entity (standard practice for internal service methods)
+    fun updatePatientDetails(id: UUID, updateRequest: PatientUpdateDto): Patient
 
     // Deletes patient AND cascades to delete their Appointments and Insurance
     fun deletePatient(id: UUID)
 
     // --- Insurance Management (OneToOne) ---
-    // Since Insurance cannot exist without a Patient, we manage it here.
-
     // Creates or Updates the insurance for a specific patient
     fun addInsuranceToPatient(patientId: UUID, insurance: Insurance): Patient
 
