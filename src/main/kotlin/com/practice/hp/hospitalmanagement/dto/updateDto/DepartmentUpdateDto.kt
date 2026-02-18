@@ -1,9 +1,8 @@
 package com.practice.hp.hospitalmanagement.dto.updateDto
 
-import com.practice.hp.hospitalmanagement.entity.DepartmentName
-import java.util.UUID
+import java.util.*
 
 data class DepartmentUpdateDto(
-    val departmentName: DepartmentName? = null,
+    val departmentName: String? = null,
     val departmentHeadId: UUID? = null
 )

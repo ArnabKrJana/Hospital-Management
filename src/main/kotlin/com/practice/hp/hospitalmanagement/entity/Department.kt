@@ -1,6 +1,7 @@
 package com.practice.hp.hospitalmanagement.entity
 
 import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -21,8 +22,8 @@ data class Department(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID?=null,
-    @Enumerated(EnumType.STRING)
-    val departmentName: DepartmentName,
+    @Column(unique = true, nullable = false)
+    var departmentName: String,
     @OneToOne
     @JoinColumn(name="doctor_department_head_id")
     var departmentHead: Doctor,
@@ -33,7 +34,7 @@ data class Department(
         joinColumns = [JoinColumn(name = "department_id")],
         inverseJoinColumns = [JoinColumn(name = "doctor_id")]
     )
-    var doctors: Set<Doctor> = emptySet()
+    var doctors: MutableSet<Doctor> = mutableSetOf()
 
     ) {
     final override fun equals(other: Any?): Boolean {
@@ -59,17 +60,3 @@ data class Department(
     }
 }
 
-enum class DepartmentName(val value: String) {
-
-    CARDIOLOGY("Cardiology"),
-    NEUROLOGY("Neurology"),
-    ORTHOPEDICS("Orthopedics"),
-    PEDIATRICS("Pediatrics"),
-    ONCOLOGY("Oncology"),
-    RADIOLOGY("Radiology"),
-    EMERGENCY_MEDICINE("Emergency Medicine"),
-    GENERAL_SURGERY("General Surgery"),
-    DERMATOLOGY("Dermatology"),
-    GYNECOLOGY("Gynecology");
-
-}

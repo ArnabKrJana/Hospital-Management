@@ -1,8 +1,10 @@
 package com.practice.hp.hospitalmanagement.service
 
+import com.practice.hp.hospitalmanagement.dto.DepartmentDto
 import com.practice.hp.hospitalmanagement.entity.Department
-import com.practice.hp.hospitalmanagement.entity.DepartmentName
 import com.practice.hp.hospitalmanagement.entity.Doctor
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import java.util.UUID
 
 interface AdminService {
@@ -12,7 +14,7 @@ interface AdminService {
 
     fun getDoctorById(id: UUID): Doctor
 
-    fun getAllDoctors(): List<Doctor>
+    fun getAllDoctors(pageable: Pageable): Page<Doctor>
 
     // Updates details like email, name, or specialization
     fun updateDoctorProfile(id: UUID, doctorDetails: Doctor): Doctor
@@ -21,11 +23,11 @@ interface AdminService {
     fun removeDoctor(id: UUID)
 
     // Department Management
-    fun createDepartment(department: Department): Department
+    fun createDepartment(department: DepartmentDto): Department
 
-    fun getDepartmentByName(name: DepartmentName): Department?
+    fun getDepartmentByName(name: String): Department?
 
-    fun getAllDepartments(): List<Department>
+    fun getAllDepartments(pageable: Pageable): Page<Department>
 
     //  The Association Logic (Crucial!)
 
