@@ -1,6 +1,7 @@
 package com.practice.hp.hospitalmanagement.service
 
 import com.practice.hp.hospitalmanagement.dto.DepartmentDto
+import com.practice.hp.hospitalmanagement.dto.updateDto.DoctorUpdateDto
 import com.practice.hp.hospitalmanagement.entity.Department
 import com.practice.hp.hospitalmanagement.entity.Doctor
 import org.springframework.data.domain.Page
@@ -17,7 +18,7 @@ interface AdminService {
     fun getAllDoctors(pageable: Pageable): Page<Doctor>
 
     // Updates details like email, name, or specialization
-    fun updateDoctorProfile(id: UUID, doctorDetails: Doctor): Doctor
+    fun updateDoctorProfile(id: UUID, doctorDetails: DoctorUpdateDto): Doctor
 
     // Hard delete (careful!) or soft delete logic
     fun removeDoctor(id: UUID)

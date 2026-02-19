@@ -1,6 +1,7 @@
 package com.practice.hp.hospitalmanagement.service.serviceImpl
 
 import com.practice.hp.hospitalmanagement.dto.DepartmentDto
+import com.practice.hp.hospitalmanagement.dto.updateDto.DoctorUpdateDto
 import com.practice.hp.hospitalmanagement.entity.Department
 import com.practice.hp.hospitalmanagement.entity.Doctor
 import com.practice.hp.hospitalmanagement.repository.DepartmentRepository
@@ -41,15 +42,15 @@ class AdminServiceImpl(
     }
 
     @Transactional
-    override fun updateDoctorProfile(id: UUID, doctorDetails: Doctor): Doctor {
+    override fun updateDoctorProfile(id: UUID, doctorDetails: DoctorUpdateDto): Doctor {
         val existingDoctor = doctorRepository.findByIdOrNull(id)
             ?: throw NoSuchElementException("Doctor with id $id not found")
 
         // Standard Update Logic: Copy new values into the managed entity
         val updatedDoctor = existingDoctor.copy(
-            fullName = doctorDetails.fullName,
-            specialization = doctorDetails.specialization,
-            email = doctorDetails.email,
+            fullName = doctorDetails.fullName ?: existingDoctor.fullName,
+            specialization = doctorDetails.specialization ?: existingDoctor.specialization,
+            email = doctorDetails.email ?: existingDoctor.email,
 
             id = existingDoctor.id,
             department = existingDoctor.department,

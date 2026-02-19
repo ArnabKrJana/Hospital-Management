@@ -1,6 +1,8 @@
 package com.practice.hp.hospitalmanagement.entity
 
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -17,6 +19,7 @@ data class Insurance(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID?=null,
+    @Enumerated(EnumType.STRING)
     val provider:InsuranceProvider,
     val policyNumber:Long,
     val issued:Boolean,
