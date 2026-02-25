@@ -46,15 +46,46 @@ class AdminServiceImpl(
         val existingDoctor = doctorRepository.findByIdOrNull(id)
             ?: throw NoSuchElementException("Doctor with id $id not found")
 
-        // Standard Update Logic: Copy new values into the managed entity
+        // --- 1. Handle Department Updates (Many-to-Many) ---
+        // We only update this if the list is explicitly provided (not null).
+        // If it's an empty list [], it will clear all departments.
+        if (doctorDetails.departmentIds != null) {
+            val newDepartmentIds = doctorDetails.departmentIds!!
+
+            // Fetch the actual Department entities for the new IDs
+            val newDepartments = departmentRepository.findAllById(newDepartmentIds).toMutableSet()
+
+            // A. Remove Doctor from departments they are leaving
+            // (Current Departments that are NOT in the New List)
+            val departmentsToRemove = existingDoctor.departments.filter { !newDepartments.contains(it) }
+            departmentsToRemove.forEach { dept ->
+                // Department is the Owning Side, so we must remove from 'dept.doctors'
+                dept.doctors.remove(existingDoctor)
+            }
+
+            // B. Add Doctor to departments they are joining
+            // (New Departments that are NOT in the Current List)
+            val departmentsToAdd = newDepartments.filter { !existingDoctor.departments.contains(it) }
+            departmentsToAdd.forEach { dept ->
+                // Department is the Owning Side, so we must add to 'dept.doctors'
+                dept.doctors.add(existingDoctor)
+            }
+
+            // C. Update the Doctor's internal list so the returned object is correct
+            // (This modifies the 'existingDoctor' reference before we copy it below)
+            existingDoctor.departments = newDepartments
+        }
+
+        // --- 2. Update Scalar Fields & Save ---
         val updatedDoctor = existingDoctor.copy(
             fullName = doctorDetails.fullName ?: existingDoctor.fullName,
             specialization = doctorDetails.specialization ?: existingDoctor.specialization,
             email = doctorDetails.email ?: existingDoctor.email,
 
+            // Keep the ID and other relationships as they are
             id = existingDoctor.id,
             department = existingDoctor.department,
-            departments = existingDoctor.departments,
+            departments = existingDoctor.departments, // This now holds the updated set from above
             appointment = existingDoctor.appointment
         )
 
