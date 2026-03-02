@@ -1,6 +1,7 @@
 package com.practice.hp.hospitalmanagement.config
 
 
+import com.practice.hp.hospitalmanagement.security.JwtAuthFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest
 import org.springframework.context.annotation.Bean
@@ -15,11 +16,13 @@ import org.springframework.security.core.userdetails.User
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
 class MyWebMvcSecurityConfiguration @Autowired constructor(
-    private val appConfig: AppConfig
+    private val appConfig: AppConfig,
+    private val jwtAuthFilter: JwtAuthFilter
 ) {
     val bcryptEncoder = appConfig.provideBcryptEncoder()
 
@@ -32,12 +35,10 @@ class MyWebMvcSecurityConfiguration @Autowired constructor(
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                    .requestMatchers("/admin/departments").hasRole("ADMIN")
-                    .requestMatchers("/admin/doctors").hasRole("DOCTOR")
-                    .requestMatchers("/auth/**").permitAll()
-                    .anyRequest().permitAll()
-            }
-            .formLogin{it.disable()}
+                    .requestMatchers( "/auth/**").permitAll()
+                    .anyRequest().authenticated()
+            }.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .formLogin { it.disable() }
 
         return http.build()
     }

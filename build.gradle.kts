@@ -36,6 +36,8 @@ dependencies {
 
         // JJWT Jackson: required at runtime if you use Jackson for JSON processing
         runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+    //kotlin logger
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
 
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")

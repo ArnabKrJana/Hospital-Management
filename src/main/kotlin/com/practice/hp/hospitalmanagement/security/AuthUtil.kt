@@ -3,6 +3,7 @@ package com.practice.hp.hospitalmanagement.security
 import com.practice.hp.hospitalmanagement.entity.User
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys.hmacShaKeyFor
+import org.antlr.v4.runtime.Token
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -28,5 +29,9 @@ class AuthUtil(
             ).
             signWith(getSecretKey())
             .compact()
+    }
+
+    fun getUsernameFromToken(token: String): String? {
+      return  Jwts.parser().verifyWith(getSecretKey()).build().parseSignedClaims(token).payload.subject
     }
 }
