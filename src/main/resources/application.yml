@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: Hospital Management
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hospital_db
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  # Delay data.sql until after Hibernate creates the tables
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+  # Ensure the script runs for all databases (not just embedded ones)
+  sql:
+    init:
+      mode: always
+
+  security:
+    # user:
+    #   name: arnab
+    #   password: 1234
+    oauth2:
+      client:
+        registration:
+          # Google
+          google:
+            client-id: 18671006801-3i9hktt2nc7rsllqrc85iseeuovg68fb.apps.googleusercontent.com
+            client-secret: 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
+
+server:
+  servlet:
+    context-path: /api/v1
+
+jwt:
+  secretkey: axvwoepoekrflnvkrjnlwjqpkwpwjeoihbsa36dxbswjhxbjahwoqlmnlkdvpo

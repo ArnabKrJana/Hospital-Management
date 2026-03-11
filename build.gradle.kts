@@ -38,6 +38,8 @@ dependencies {
         runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
     //kotlin logger
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
+//o-auth2 starter
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")

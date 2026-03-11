@@ -1,8 +1,11 @@
 package com.practice.hp.hospitalmanagement.entity
 
 
+import com.practice.hp.hospitalmanagement.util.OAuthProviderType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -22,19 +25,28 @@ class User(
 
     @Column(unique = true, length = 64)
     private val username: String,
+    private val password: String?=null,
+    @Column(unique = true)
+    private var providerId: String? = null,
 
-    private val password: String
+    @Enumerated(EnumType.STRING)
+    private var providerType: OAuthProviderType?=null,
+    @Column(unique = true)
+     val email: String?=null,
+    var name: String?=null,
+
+
 
 ) : UserDetails {
 
     override fun getAuthorities(): Collection<GrantedAuthority> =
         emptyList()
 
-    override fun getPassword(): String =
-        password
+    override fun getPassword(): String? {
+        return password
+    }
 
-    override fun getUsername(): String =
-        username
-
-
+    override fun getUsername(): String {
+      return username
+    }
 }

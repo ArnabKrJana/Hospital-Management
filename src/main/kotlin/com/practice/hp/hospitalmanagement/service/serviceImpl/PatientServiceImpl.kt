@@ -5,15 +5,23 @@ import com.practice.hp.hospitalmanagement.entity.Insurance
 import com.practice.hp.hospitalmanagement.entity.Patient
 import com.practice.hp.hospitalmanagement.repository.PatientRepository
 import com.practice.hp.hospitalmanagement.service.PatientService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+
 import java.util.UUID
 
 @Service
 class PatientServiceImpl(
     private val patientRepository: PatientRepository
 ) : PatientService {
+
+    @Transactional(readOnly = true)
+    override fun getAllPatients(pageable: Pageable): Page<Patient> {
+       return patientRepository.findAll(pageable)
+    }
 
     @Transactional
     override fun registerPatient(patient: Patient): Patient {

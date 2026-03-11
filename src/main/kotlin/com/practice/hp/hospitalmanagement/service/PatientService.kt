@@ -3,10 +3,13 @@ package com.practice.hp.hospitalmanagement.service
 import com.practice.hp.hospitalmanagement.dto.updateDto.PatientUpdateDto
 import com.practice.hp.hospitalmanagement.entity.Insurance
 import com.practice.hp.hospitalmanagement.entity.Patient
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import java.util.UUID
 
 interface PatientService {
 
+    fun getAllPatients(pageable: Pageable): Page<Patient>
     // --- Patient Onboarding ---
     fun registerPatient(patient: Patient): Patient
 

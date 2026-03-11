@@ -1,10 +1,13 @@
 package com.practice.hp.hospitalmanagement.security
 
 import com.practice.hp.hospitalmanagement.entity.User
+import com.practice.hp.hospitalmanagement.repository.UserRepository
+import io.jsonwebtoken.Jwt
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys.hmacShaKeyFor
-import org.antlr.v4.runtime.Token
+import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import java.time.Instant
 import java.util.Date
@@ -12,26 +15,40 @@ import javax.crypto.SecretKey
 
 @Component
 class AuthUtil(
-    @Value("\${jwt.secretkey}")
-    private val jwtSecretKey: String
+    @Value($$"${jwt.secretkey}")
+    private val securityKey: String,
+    private val userRepository: UserRepository
 ) {
-    private fun getSecretKey(): SecretKey {
-        return hmacShaKeyFor(jwtSecretKey.toByteArray())
+
+    fun getSecretKey(): SecretKey {
+        return Keys.hmacShaKeyFor(securityKey.toByteArray())
     }
 
-    fun generateAccessToken(user: User): String {
-        return Jwts.builder()
+    fun generateJwtToken(user: User): String {
+        val token = Jwts.builder()
             .subject(user.username)
-            .claim("userId", user.userId)
+            .claim("username", user.username)
             .issuedAt(Date.from(Instant.now()))
-            .expiration(
-                Date(System.currentTimeMillis() + 1000 * 60 * 10)
-            ).
-            signWith(getSecretKey())
+            .expiration(Date(System.currentTimeMillis() + 15 * 3600 * 1000))
+            .signWith(getSecretKey())
             .compact()
+        return token
     }
 
-    fun getUsernameFromToken(token: String): String? {
-      return  Jwts.parser().verifyWith(getSecretKey()).build().parseSignedClaims(token).payload.subject
+    fun extractUsernameFromToken(token: String): String {
+        val claims = Jwts.parser().verifyWith(getSecretKey()).build()
+        val username = claims.parseSignedClaims(token).payload.subject
+        return username
+    }
+
+    fun validateToken(user: User, token: String): Boolean {
+        val username = extractUsernameFromToken(token)
+        if (SecurityContextHolder.getContext().authentication == null) {
+            val authentication = UsernamePasswordAuthenticationToken(username, null, user.authorities)
+            SecurityContextHolder.getContext().authentication = authentication
+            return true
+        }
+
+        return false
     }
 }
