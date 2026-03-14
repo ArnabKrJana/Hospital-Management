@@ -7,7 +7,9 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToMany
+import jakarta.persistence.MapsId
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
 import org.hibernate.proxy.HibernateProxy
@@ -16,14 +18,18 @@ import java.util.UUID
 @Entity
 data class Doctor(
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID?=null,
-    val fullName:String,
+//    @GeneratedValue(strategy = GenerationType.UUID)
+    val id: UUID? = null,
+    @OneToOne
+    @MapsId
+    @JoinColumn("user_id")
+    val user: User,
+    val fullName: String,
     @Enumerated(EnumType.STRING)
-    val specialization:Specialization,
-    val email:String,
-@OneToOne(mappedBy = "departmentHead")
-var department:Department?= null,
+    val specialization: Specialization,
+    val email: String,
+    @OneToOne(mappedBy = "departmentHead")
+    var department: Department? = null,
     @OneToMany(mappedBy = "doctor")
     var appointment: List<Appointment?> = emptyList(),
 

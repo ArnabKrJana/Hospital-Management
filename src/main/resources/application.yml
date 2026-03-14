@@ -12,13 +12,13 @@ spring:
   jpa:
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     show-sql: true
 
   # Ensure the script runs for all databases (not just embedded ones)
   sql:
     init:
-      mode: always
+      mode: never
 
   security:
     # user:
@@ -29,12 +29,12 @@ spring:
         registration:
           # Google
           google:
-            client-id: 18671006801-3i9hktt2nc7rsllqrc85iseeuovg68fb.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
 
 server:
   servlet:
     context-path: /api/v1
 
 jwt:
-  secretkey: axvwoepoekrflnvkrjnlwjqpkwpwjeoihbsa36dxbswjhxbjahwoqlmnlkdvpo
+  secretkey: ${JWT_SECRET_KEY}

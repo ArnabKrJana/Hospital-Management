@@ -10,7 +10,7 @@ import java.util.*
 @Entity
 data class Patient(
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+//    @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
     val firstName: String,
     val lastName: String,
@@ -24,6 +24,11 @@ data class Patient(
 
     @OneToOne(mappedBy = "patient", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
     var insurance: Insurance? = null,
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
+    val user: User,
 
     ) {
     final override fun equals(other: Any?): Boolean {
@@ -53,5 +58,6 @@ data class Patient(
 enum class GenderType(val value: String) {
     MALE("Male"),
     FEMALE("Female"),
-    OTHERS("Others")
+    OTHERS("Others"),
+    PREFERRED_NOT_SAY("Preferred not say")
 }

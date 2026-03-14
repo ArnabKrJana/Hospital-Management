@@ -1,4 +1,4 @@
-package com.practice.hp.hospitalmanagement.util
+package com.practice.hp.hospitalmanagement.util.types
 
 enum class OAuthProviderType {
     GOOGLE,

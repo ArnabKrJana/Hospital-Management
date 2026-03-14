@@ -4,12 +4,13 @@ import com.practice.hp.hospitalmanagement.util.mapper.Mapper
 
 import com.practice.hp.hospitalmanagement.dto.DepartmentDto
 import com.practice.hp.hospitalmanagement.entity.Department
+import com.practice.hp.hospitalmanagement.entity.User
 import org.springframework.stereotype.Component
 
 @Component
 class DepartmentMapper : Mapper<DepartmentDto, Department> {
 
-    override fun dtoToEntity(dto: DepartmentDto): Department {
+    override fun dtoToEntity(dto: DepartmentDto,user: User): Department {
         // NOTE: Department requires a departmentHead (it's non-nullable in Entity).
         // This method might fail if you try to use it for Creation without a dummy doctor.
         // Usually, creation logic is handled manually in the Service for this specific entity.

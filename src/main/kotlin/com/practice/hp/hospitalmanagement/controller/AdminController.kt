@@ -5,6 +5,7 @@ package com.practice.hp.hospitalmanagement.controller
 import com.practice.hp.hospitalmanagement.dto.DepartmentDto
 import com.practice.hp.hospitalmanagement.dto.DoctorDto
 import com.practice.hp.hospitalmanagement.dto.updateDto.DoctorUpdateDto
+import com.practice.hp.hospitalmanagement.entity.User
 import com.practice.hp.hospitalmanagement.service.AdminService
 import com.practice.hp.hospitalmanagement.util.mapper.mapperImpl.DepartmentMapper
 import com.practice.hp.hospitalmanagement.util.mapper.mapperImpl.DoctorMapper
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
@@ -29,9 +31,11 @@ class AdminController(
     // ==========================================
 
     @PostMapping("/doctors")
-    fun onboardDoctor(@RequestBody doctorDto: DoctorDto): ResponseEntity<DoctorDto> {
+    fun onboardDoctor(@RequestBody doctorDto: DoctorDto,
+                      @AuthenticationPrincipal currentUser: User
+                      ): ResponseEntity<DoctorDto> {
         // 1. Convert DTO -> Entity
-        val doctorEntity = doctorMapper.dtoToEntity(doctorDto)
+        val doctorEntity = doctorMapper.dtoToEntity(doctorDto,currentUser)
 
         // 2. Call Service
         val savedDoctor = adminService.onboardDoctor(doctorEntity)

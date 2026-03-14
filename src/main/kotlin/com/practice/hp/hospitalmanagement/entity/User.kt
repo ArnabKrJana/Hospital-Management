@@ -1,11 +1,14 @@
 package com.practice.hp.hospitalmanagement.entity
 
 
-import com.practice.hp.hospitalmanagement.util.OAuthProviderType
+import com.practice.hp.hospitalmanagement.util.types.OAuthProviderType
+import com.practice.hp.hospitalmanagement.util.types.RoleType
 import jakarta.persistence.Column
+import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -25,19 +28,19 @@ class User(
 
     @Column(unique = true, length = 64)
     private val username: String,
-    private val password: String?=null,
-    @Column(unique = true)
-    private var providerId: String? = null,
+    private val password: String? = null,
+    @Column(unique = true) var providerId: String? = null,
 
+    @Enumerated(EnumType.STRING) var providerType: OAuthProviderType? = null,
+    @Column(unique = true)
+    val email: String? = null,
+    var name: String? = null,
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private var providerType: OAuthProviderType?=null,
-    @Column(unique = true)
-     val email: String?=null,
-    var name: String?=null,
+    var roles: MutableSet<RoleType> = mutableSetOf(),
 
 
-
-) : UserDetails {
+    ) : UserDetails {
 
     override fun getAuthorities(): Collection<GrantedAuthority> =
         emptyList()
@@ -47,6 +50,6 @@ class User(
     }
 
     override fun getUsername(): String {
-      return username
+        return username
     }
 }

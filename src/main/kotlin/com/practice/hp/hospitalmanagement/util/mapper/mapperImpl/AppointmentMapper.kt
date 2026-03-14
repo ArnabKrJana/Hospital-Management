@@ -2,13 +2,12 @@ package com.practice.hp.hospitalmanagement.util.mapper.mapperImpl
 
 import com.practice.hp.hospitalmanagement.dto.AppointmentDto
 import com.practice.hp.hospitalmanagement.entity.Appointment
+import com.practice.hp.hospitalmanagement.entity.User
 import com.practice.hp.hospitalmanagement.util.mapper.Mapper
 
 class AppointmentMapper : Mapper<AppointmentDto, Appointment> {
 
-    override fun dtoToEntity(dto: AppointmentDto): Appointment {
-        // Note: Cannot map 'patient' and 'doctor' objects here because we only have IDs.
-        // The Service layer must fetch the Patient/Doctor entities and set them.
+    override fun dtoToEntity(dto: AppointmentDto,user: User): Appointment {
         return Appointment(
             id = dto.id,
             category = dto.category,

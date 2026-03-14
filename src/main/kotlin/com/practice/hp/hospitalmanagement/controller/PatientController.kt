@@ -3,6 +3,7 @@ package com.practice.hp.hospitalmanagement.controller
 import com.practice.hp.hospitalmanagement.dto.InsuranceDto
 import com.practice.hp.hospitalmanagement.dto.PatientDto
 import com.practice.hp.hospitalmanagement.dto.updateDto.PatientUpdateDto
+import com.practice.hp.hospitalmanagement.entity.User
 import com.practice.hp.hospitalmanagement.service.PatientService
 import com.practice.hp.hospitalmanagement.util.mapper.mapperImpl.InsuranceMapper
 import com.practice.hp.hospitalmanagement.util.mapper.mapperImpl.PatientMapper
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
@@ -18,8 +20,9 @@ import java.util.UUID
 @RequestMapping("/patients")
 class PatientController(
     private val patientService: PatientService,
-    private val insuranceMapper: InsuranceMapper // Injected because it has @Component
-) {
+    private val insuranceMapper: InsuranceMapper,
+
+    ) {
 
     private val patientMapper = PatientMapper()
 
@@ -28,8 +31,11 @@ class PatientController(
     // ==========================================
 
     @PostMapping
-    fun registerPatient(@RequestBody patientDto: PatientDto): ResponseEntity<PatientDto> {
-        val patientEntity = patientMapper.dtoToEntity(patientDto)
+    fun registerPatient(
+        @RequestBody patientDto: PatientDto,
+        @AuthenticationPrincipal currentUser: User
+    ): ResponseEntity<PatientDto> {
+        val patientEntity = patientMapper.dtoToEntity(patientDto,currentUser)
         val savedPatient = patientService.registerPatient(patientEntity)
         return ResponseEntity(patientMapper.entityToDto(savedPatient), HttpStatus.CREATED)
     }
@@ -77,9 +83,10 @@ class PatientController(
     @PostMapping("/{patientId}/insurance")
     fun addInsuranceToPatient(
         @PathVariable patientId: UUID,
-        @RequestBody insuranceDto: InsuranceDto
+        @RequestBody insuranceDto: InsuranceDto,
+        @AuthenticationPrincipal currentUser: User
     ): ResponseEntity<PatientDto> {
-        val insuranceEntity = insuranceMapper.dtoToEntity(insuranceDto)
+        val insuranceEntity = insuranceMapper.dtoToEntity(insuranceDto,currentUser)
         val updatedPatient = patientService.addInsuranceToPatient(patientId, insuranceEntity)
         return ResponseEntity.ok(patientMapper.entityToDto(updatedPatient))
     }

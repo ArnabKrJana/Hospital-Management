@@ -2,13 +2,14 @@ package com.practice.hp.hospitalmanagement.util.mapper.mapperImpl
 
 import com.practice.hp.hospitalmanagement.dto.InsuranceDto
 import com.practice.hp.hospitalmanagement.entity.Insurance
+import com.practice.hp.hospitalmanagement.entity.User
 import com.practice.hp.hospitalmanagement.util.mapper.Mapper
 import org.springframework.stereotype.Component
 
 @Component
 class InsuranceMapper : Mapper<InsuranceDto, Insurance> {
 
-    override fun dtoToEntity(dto: InsuranceDto): Insurance {
+    override fun dtoToEntity(dto: InsuranceDto,user: User): Insurance {
         return Insurance(
             id = dto.id,
             provider = dto.provider,

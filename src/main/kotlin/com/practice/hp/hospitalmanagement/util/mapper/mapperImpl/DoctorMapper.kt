@@ -2,19 +2,20 @@ package com.practice.hp.hospitalmanagement.util.mapper.mapperImpl
 
 import com.practice.hp.hospitalmanagement.dto.DoctorDto
 import com.practice.hp.hospitalmanagement.entity.Doctor
+import com.practice.hp.hospitalmanagement.entity.User
 import com.practice.hp.hospitalmanagement.util.mapper.Mapper
 import org.springframework.stereotype.Component
 
 @Component
 class DoctorMapper : Mapper<DoctorDto, Doctor> {
 
-    override fun dtoToEntity(dto: DoctorDto): Doctor {
+    override fun dtoToEntity(dto: DoctorDto,user: User): Doctor {
         return Doctor(
             id = dto.id,
             fullName = dto.fullName,
             specialization = dto.specialization,
-            email = dto.email
-            // Departments are fetched and assigned in AdminService
+            email = dto.email,
+            user = user
         )
     }
 
