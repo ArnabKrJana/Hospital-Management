@@ -15,6 +15,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.proxy.HibernateProxy
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.UUID
 
@@ -42,8 +43,9 @@ class User(
 
     ) : UserDetails {
 
-    override fun getAuthorities(): Collection<GrantedAuthority> =
-        emptyList()
+    override fun getAuthorities(): Collection<GrantedAuthority> {
+        return roles.map { SimpleGrantedAuthority("ROLE_$it") }
+    }
 
     override fun getPassword(): String? {
         return password

@@ -1,12 +1,15 @@
 package com.practice.hp.hospitalmanagement.service.serviceImpl
 
 import com.practice.hp.hospitalmanagement.dto.DepartmentDto
+import com.practice.hp.hospitalmanagement.dto.DoctorDto
 import com.practice.hp.hospitalmanagement.dto.updateDto.DoctorUpdateDto
 import com.practice.hp.hospitalmanagement.entity.Department
 import com.practice.hp.hospitalmanagement.entity.Doctor
 import com.practice.hp.hospitalmanagement.repository.DepartmentRepository
 import com.practice.hp.hospitalmanagement.repository.DoctorRepository
+import com.practice.hp.hospitalmanagement.repository.UserRepository
 import com.practice.hp.hospitalmanagement.service.AdminService
+import com.practice.hp.hospitalmanagement.util.types.RoleType
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -18,16 +21,32 @@ import java.util.UUID
 class AdminServiceImpl(
     private val doctorRepository: DoctorRepository,
     private val departmentRepository: DepartmentRepository,
+    private val userRepository: UserRepository
 ) : AdminService {
 
     @Transactional
-    override fun onboardDoctor(doctor: Doctor): Doctor {
-        doctor.id?.let { id ->
-            if (doctorRepository.existsById(id)) {
-                throw IllegalArgumentException("Doctor with id $id already exists")
-            }
+    override fun upgradeUserToDoctor(userId: UUID, doctorDto: DoctorDto): Doctor {
+
+        val targetUser = userRepository.findByIdOrNull(userId)
+            ?: throw NoSuchElementException("User with id $userId not found")
+
+        if (doctorRepository.existsById(userId)) {
+            throw IllegalArgumentException("User is already a doctor")
         }
-        return doctorRepository.save(doctor)
+
+        // Upgrade roles
+        targetUser.roles.add(RoleType.DOCTOR)
+        userRepository.save(targetUser)
+
+        // Create the Doctor entity linked to this specific user
+        val newDoctor = Doctor(
+            user = targetUser,
+            fullName = doctorDto.fullName,
+            specialization = doctorDto.specialization,
+            email = doctorDto.email
+        )
+
+        return doctorRepository.save(newDoctor)
     }
 
     @Transactional(readOnly = true)
@@ -167,7 +186,7 @@ class AdminServiceImpl(
             ?: throw NoSuchElementException("Department with id $departmentId not found")
 
         // 1. Owning Side Update (Department -> Doctors)
-         department.doctors.add(doctor)
+        department.doctors.add(doctor)
 
         // 2. Inverse Side Update (Doctor -> Departments)
         doctor.departments.add(department)

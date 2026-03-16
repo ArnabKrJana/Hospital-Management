@@ -30,17 +30,15 @@ class AdminController(
     // DOCTOR MANAGEMENT
     // ==========================================
 
-    @PostMapping("/doctors")
-    fun onboardDoctor(@RequestBody doctorDto: DoctorDto,
-                      @AuthenticationPrincipal currentUser: User
-                      ): ResponseEntity<DoctorDto> {
-        // 1. Convert DTO -> Entity
-        val doctorEntity = doctorMapper.dtoToEntity(doctorDto,currentUser)
+    @PostMapping("/users/{userId}/upgrade-to-doctor")
+    fun upgradeToDoctor(
+        @PathVariable userId: UUID,
+        @RequestBody doctorDto: DoctorDto
+    ): ResponseEntity<DoctorDto> {
 
-        // 2. Call Service
-        val savedDoctor = adminService.onboardDoctor(doctorEntity)
+        // Call the service with the target user's ID
+        val savedDoctor = adminService.upgradeUserToDoctor(userId, doctorDto)
 
-        // 3. Convert Entity -> DTO & Return 201 Created
         return ResponseEntity(doctorMapper.entityToDto(savedDoctor), HttpStatus.CREATED)
     }
 

@@ -1,6 +1,7 @@
 package com.practice.hp.hospitalmanagement.service
 
 import com.practice.hp.hospitalmanagement.dto.DepartmentDto
+import com.practice.hp.hospitalmanagement.dto.DoctorDto
 import com.practice.hp.hospitalmanagement.dto.updateDto.DoctorUpdateDto
 import com.practice.hp.hospitalmanagement.entity.Department
 import com.practice.hp.hospitalmanagement.entity.Doctor
@@ -11,7 +12,7 @@ import java.util.UUID
 interface AdminService {
 
     //  Doctor Management
-    fun onboardDoctor(doctor: Doctor): Doctor
+    fun upgradeUserToDoctor(userId: UUID, doctorDto: DoctorDto): Doctor
 
     fun getDoctorById(id: UUID): Doctor
 
