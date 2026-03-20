@@ -4,4 +4,5 @@ enum class RoleType {
     ADMIN,
     PATIENT,
     DOCTOR,
+
 }

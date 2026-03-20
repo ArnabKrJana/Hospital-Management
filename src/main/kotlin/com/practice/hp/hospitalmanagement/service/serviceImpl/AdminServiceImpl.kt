@@ -41,7 +41,7 @@ class AdminServiceImpl(
         // Create the Doctor entity linked to this specific user
         val newDoctor = Doctor(
             user = targetUser,
-            fullName = doctorDto.fullName,
+            fullName = requireNotNull(targetUser.name),
             specialization = doctorDto.specialization,
             email = doctorDto.email
         )

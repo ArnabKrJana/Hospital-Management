@@ -5,7 +5,7 @@ import java.util.UUID
 
 data class DoctorDto(
     val id: UUID? = null,
-    val fullName: String,
+    val fullName: String?=null,
     val specialization: Specialization,
     val email: String,
 

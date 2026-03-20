@@ -30,7 +30,7 @@ class AdminController(
     // DOCTOR MANAGEMENT
     // ==========================================
 
-    @PostMapping("/users/{userId}/upgrade-to-doctor")
+    @PostMapping("/users/{userId}/onBoardNewDoctor")
     fun upgradeToDoctor(
         @PathVariable userId: UUID,
         @RequestBody doctorDto: DoctorDto

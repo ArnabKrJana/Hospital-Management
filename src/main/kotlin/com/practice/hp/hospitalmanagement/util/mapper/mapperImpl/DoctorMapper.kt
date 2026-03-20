@@ -12,7 +12,7 @@ class DoctorMapper : Mapper<DoctorDto, Doctor> {
     override fun dtoToEntity(dto: DoctorDto,user: User): Doctor {
         return Doctor(
             id = dto.id,
-            fullName = dto.fullName,
+            fullName = requireNotNull(dto.fullName),
             specialization = dto.specialization,
             email = dto.email,
             user = user

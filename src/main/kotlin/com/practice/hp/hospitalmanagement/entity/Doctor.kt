@@ -1,5 +1,6 @@
 package com.practice.hp.hospitalmanagement.entity
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -27,6 +28,7 @@ data class Doctor(
     val fullName: String,
     @Enumerated(EnumType.STRING)
     val specialization: Specialization,
+    @Column(unique = true)
     val email: String,
     @OneToOne(mappedBy = "departmentHead")
     var department: Department? = null,

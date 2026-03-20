@@ -1,6 +1,7 @@
 package com.practice.hp.hospitalmanagement.entity
 
 
+import com.practice.hp.hospitalmanagement.security.RoleToPermission
 import com.practice.hp.hospitalmanagement.util.types.OAuthProviderType
 import com.practice.hp.hospitalmanagement.util.types.RoleType
 import jakarta.persistence.Column
@@ -44,7 +45,15 @@ class User(
     ) : UserDetails {
 
     override fun getAuthorities(): Collection<GrantedAuthority> {
-        return roles.map { SimpleGrantedAuthority("ROLE_$it") }
+        val authorities = roles.map { SimpleGrantedAuthority("ROLE_${it.name}") }.toMutableList()
+        roles.forEach { role ->
+            val permissionsForRoles = RoleToPermission.mapping[role] ?: mutableSetOf()
+            permissionsForRoles.forEach { permission ->
+                authorities.add(SimpleGrantedAuthority(permission.value))
+            }
+
+        }
+        return authorities
     }
 
     override fun getPassword(): String? {
